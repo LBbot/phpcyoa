@@ -8,7 +8,9 @@ if (isset($_SESSION["email"]) && !empty($_SESSION["email"])) {
 
 // if form is posted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-    print_r($_POST);
+
+    // Empty array for errors to start
+    $input_error_array = array();
 
     // 404 or database error catching with try/catch
     try {
@@ -18,38 +20,37 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $decoded_json = json_decode($json, true);
         $couch_rows_arr = $decoded_json["rows"];
 
-        // FOR DEBUGGING
-        print_r($couch_rows_arr);
-
-        // If it returns an empty array, the username is in use
+        // If it returns an empty array, the username/email is not in use, so can't check password
         if (empty($couch_rows_arr)) {
-            $custom_error = "Email address does not exist.";
-            exit(include_once "error.php");
+            array_push($input_error_array, "Email address does not exist.");
+        } else { // otherwise let's compare passwords
+            // Password is in the value of the doc
+            $hashed_password = $couch_rows_arr[0]["value"];
+            // PASSWORD VERIFCATION
+            if (!password_verify($_POST["password"], $hashed_password)) {
+                array_push($input_error_array, "Password is incorrect.");
+            }
         }
 
-        // Password is in the value of the doc
-        $hashed_password = $couch_rows_arr[0]["value"];
-        // PASSWORD VERIFCATION
-        if (!password_verify($_POST["password"], $hashed_password)) {
-            $custom_error = "Password is incorrect.";
-            exit(include_once "error.php");
+        if (empty($input_error_array)) {
+            $_SESSION["email"] = $couch_rows_arr[0]["key"];
+            header("location: profile.php");
         }
-
-        echo "CORRECT PASSWORD!!!!!";
-
-        $_SESSION["email"] = $couch_rows_arr[0]["key"];
-        // var_dump($_SESSION);
-        header("location: profile.php");
 
     } catch (Exception $e) {
-        $custom_error = "Error connecting to database. Please try again later.";
-        exit(include_once "error.php"); // Will check for the above variable and display it
+        array_push($input_error_array, "Error connecting to database. Please try again later.");
     }
 }
 
     // Set up page title and <head>/header
     $page_title = "Login - PHP CYOA";
     include_once "head.php";
+
+    // If any errors: show them
+    if (!empty($input_error_array)) {
+        foreach($input_error_array as $single_error)
+        echo "<h3>- $single_error</h3>";
+    }
 
 ?>
 

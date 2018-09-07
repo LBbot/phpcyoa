@@ -8,14 +8,17 @@ if (isset($_SESSION["email"]) && !empty($_SESSION["email"])) {
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 
+    // Empty array for errors to start
+    $input_error_array = array();
+
     // $_POST contains the form data as associative array
     // strip any whitespace
     $_POST["email"] = trim($_POST["email"]);
     // Check for blank data
     foreach ($_POST as $form_entry) {
         if ($form_entry == "") {
-            $custom_error = "All fields are required and cannot be left blank.";
-            exit(include_once "error.php"); // Will check for the above variable and display it
+            array_push($input_error_array, "All fields are required and cannot be left blank.");
+            break;
         }
     }
 
@@ -27,23 +30,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $decoded_json = json_decode($json, true);
         $couch_rows_arr = $decoded_json["rows"];
 
-        // FOR DEBUGGING
-        print_r($couch_rows_arr);
-
         // If it doesn't return an empty array, the email is in use
         if (empty($couch_rows_arr) === false) {
-            $custom_error = "Email address already in use. Please log in or try another.";
-            exit(include_once "error.php");
+            array_push($input_error_array, "Email address already in use. Please log in or try another.");
         }
     } catch (Exception $e) {
-        $custom_error = "Error connecting to database. Please try again later.";
-        exit(include_once "error.php"); // Will check for the above variable and display it
+        array_push($input_error_array, "Error connecting to database. Please try again later.");
     }
 
     // Compare password with confirmation
     if ($_POST["password"] !== $_POST["passwordconfirm"]) {
-        $custom_error = "Passwords must match";
-        exit(include_once "error.php"); // Will check for the above variable and display it
+        array_push($input_error_array, "Passwords must match");
     }
 
     // Let's remove the confirm once tested, we don't need that in the DB
@@ -59,23 +56,33 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $_POST["date"] = date(DATE_ATOM);
     $_POST["readable_date"] = date("H:i:sA D d/m/Y");
 
-    // ACTUALLY POST TO COUCH
-    $response = $client->request("POST", "phpusers", [
-        "json" => $_POST
-    ]);
+    // If no errors, post to couch and redirect to login
+    if (empty($input_error_array)) {
+        // ACTUALLY POST TO COUCH
+        $response = $client->request("POST", "phpusers", [
+            "json" => $_POST
+        ]);
 
-    // Checks for confirmation
-    if ($response->getBody()){
-        echo "Success!";
-        header("location: login.php");
-    } else {
-        echo "There was a problem posting to database.";
+        // Checks for confirmation
+        if ($response->getBody()){
+            echo "Success!";
+            header("location: login.php");
+        } else {
+            array_push($input_error_array, "There was a problem posting to database.");
+        }
     }
 }
 
     // Set up page title and <head>/header
     $page_title = "Register an account - PHP CYOA";
     include_once "head.php";
+
+    // If any errors: show them
+    if (!empty($input_error_array)) {
+        foreach($input_error_array as $single_error)
+        echo "<h3>- $single_error</h3>";
+    }
+
 ?>
 
     <form method = "post">

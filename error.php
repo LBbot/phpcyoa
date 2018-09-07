@@ -2,7 +2,7 @@
 <?php
 
 if (isset($custom_error)) {
-    echo "<h2>$custom_error</h2>";
+    echo "<h3>$custom_error</h3>";
 }
 
 ?>

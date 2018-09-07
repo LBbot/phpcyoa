@@ -12,8 +12,8 @@ if (!isset($_SESSION["email"]) || empty($_SESSION["email"])) {
 ?>
 
 
-
-    <h2>Hi, <?php echo $_SESSION["email"]; ?>!</h2>
+    <!-- escape any of the users characters we're displaying back to them -->
+    <h2><?php echo htmlspecialchars($_SESSION["email"]); ?></h2>
 
     <form method="get" action="gametemplate.php">
         <input type="submit" class="custom-button" name="1" value="Start new game">
@@ -35,7 +35,7 @@ if (!isset($_SESSION["email"]) || empty($_SESSION["email"])) {
 
         } catch (Exception $e) {
             $custom_error = "Error connecting to database. Please try again later.";
-            exit(include_once "error.php"); // Will check for the above variable and display it
+            echo $custom_error;
         }
     ?>
 
