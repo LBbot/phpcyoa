@@ -1,0 +1,4 @@
+# ignore Composer downloads
+/vendor/*
+.DS_Store
+post-backup

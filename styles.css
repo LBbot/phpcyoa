@@ -1,0 +1,111 @@
+html {
+    height: 100%;
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+body {
+    height: 100%;
+    font-family: sans-serif;
+    text-align: center;
+    background-color: #151717;
+    color: white;
+    font-size: x-large;
+}
+
+h1 {
+    margin-top: 0px;
+}
+
+.container {
+    margin: 0 auto;
+    max-width: 600px;
+}
+
+.game-container {
+    margin: 0 auto;
+    max-width: 600px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.prose {
+    text-align: left;
+    font-size: large;
+    padding: 5px;
+    font-family: serif;
+}
+
+.save-message {
+    font-size: medium;
+}
+
+.form-textbox {
+    width: 95%;
+    margin: 10px auto 30px auto;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: x-large;
+}
+
+.custom-button {
+    width: 95%;
+    margin: 10px auto;
+    padding: 10px;
+    background-color: white;
+    color: black;
+    border: 1px solid white;
+    border-radius: 4px;
+    font-size: x-large;
+    cursor: pointer;
+    white-space: normal;
+
+}
+
+.custom-button:hover {
+    background-color: #d9dadb;
+}
+
+.custom-button:active {
+    background-color: #151717;
+    color: white;
+    border: 1px solid white;
+}
+
+a:link, a:visited {
+    color: white;
+}
+
+a:hover, a:active {
+    color: #d9dadb;
+    text-decoration: none;
+}
+
+.unimportant-button {
+    width: 95%;
+    display: inline-block;
+    margin: 30px auto 5px auto;
+    padding: 10px;
+    background-color: #151717;
+    color: white;
+    border: 1px solid white;
+    border-radius: 4px;
+    font-size: x-large;
+    cursor: pointer;
+}
+
+.unimportant-button:hover {
+    background-color: #d9dadb;
+    color: black;
+}
+
+.unimportant-button:active {
+    background-color: white;
+    color: black;
+    border: 1px solid white;
+}
+
+

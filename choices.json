@@ -1,0 +1,172 @@
+{
+    "1": {
+        "the_question": "You are a mercenary tasked with escorting a goods-laden cart down a dangerous road. Pacing ahead of the cart with your fellow mercenary Jarret, you spy a goblin in the middle of the road. Jarret shouts, 'Look! We should kill it!'",
+        "answer_a": "Attack!",
+        "a_id": 2,
+        "answer_b": "Disagree",
+        "b_id": 3
+    },
+
+    "2": {
+        "the_question": "You agree to attack the goblin, drawing your broadsword from its sheath. Do you...",
+        "answer_a": "Charge!",
+        "a_id": 4,
+        "answer_b": "Approach carefully.",
+        "b_id": 5
+    },
+
+    "3": {
+        "the_question": "You talk Jarret out of attacking the lone goblin. 'What else do you suggest?' he asks.",
+        "answer_a": "Talk to the goblin.",
+        "a_id": 6,
+        "answer_b": "Let's wait...",
+        "b_id": 7
+    },
+
+    "4": {
+        "the_question": "You charge forward. Halfway to the goblin, the ground gives way underneath your feet - a trap! The last thing you see is a pit of wooden spikes hurtling towards you."
+    },
+
+    "5": {
+        "the_question": "Approaching carefully, you notice a discolouration in the ground, stones and twigs suspiciously arranged in a circle, most the width of the road. A trap, no doubt. You pat yourself on the back for your keen observation.",
+        "answer_a": "Leap over the trap",
+        "a_id": 8,
+        "answer_b": "Warn Jarret",
+        "b_id": 9
+    },
+
+    "6": {
+        "the_question": "You try to talk to the goblin, then remember you don't speak goblin. You've made a fool of yourself in front of Jarret, the drover, and the goblin. You immediately die of shame."
+    },
+
+    "7": {
+        "the_question": "You wait, fingers brushing the hilt of your weapon, sweaty with anticipation...until the goblin gets frustrated and beckons you, jabbing a finger at a discoloured section of the road, stones and twigs suspiciously arranged in a wide circle. A trap.",
+        "answer_a": "Oblige the goblin and step into the trap",
+        "a_id": 23,
+        "answer_b": "Laugh at the goblin for revealing its trap",
+        "b_id": 24
+    },
+
+    "23": {
+        "the_question": "The discoloured ground crumbles under your feet. The last thing you see is a pit of wooden spikes hurtling towards you. But at least you made the goblin feel better."
+    },
+
+    "24": {
+        "the_question": "You and Jarret point and laugh. The goblin hops up and down in a rage, you don't speak goblin but you're quite sure it's swearing.",
+        "answer_a": "Avoid the trap and attack",
+        "a_id": 25,
+        "answer_b": "Ignore the goblin",
+        "b_id": 26
+    },
+
+    "25": {
+        "the_question": "You and Jarret draw your broadswords and leap over the trap to the other side, where the goblin now looks rather alarmed and starts backing away.",
+        "answer_a": "Charge!",
+        "a_id": 18,
+        "answer_b": "Approach carefully",
+        "b_id": 19
+    },
+
+
+    "26": {
+        "the_question": "You guide the cart around the trap, keeping an eye on the dejected goblin. He eventually slinks off in embarrassment. You press on, chuckling. The road continues..."
+    },
+
+    "8": {
+        "the_question": "You launch yourself over the trap, boots skidding in the mud on the other side. Jarret, distracted by this feat of athleticism, steps on the discoloured ground which collapses and drops him into a pit of stakes which brutally skewer him to death.",
+        "answer_a": "Scream 'NOOOOOOOO!'",
+        "a_id": 10,
+        "answer_b": "Shrug. You get his cut of the pay.",
+        "b_id": 11
+    },
+
+    "9": {
+        "the_question": "'It's a trap!' you call out to Jarret, pointing to the discolored ground. You both leap over it to the other side, where the goblin now looks rather alarmed and starts backing away.",
+        "answer_a": "Charge!",
+        "a_id": 18,
+        "answer_b": "Approach carefully",
+        "b_id": 19
+    },
+
+    "18": {
+        "the_question": "You and Jarret fly at the terrified goblin, who turns to flee.",
+        "answer_a": "Cut the goblin down",
+        "a_id": 20,
+        "answer_b": "Let the goblin go",
+        "b_id": 19
+    },
+
+    "20": {
+        "the_question": "You cut the goblin's legs out from under it and take turns with Jarret stabbing it to death. Then you guide the cart around the trap, enjoying some bread with the drover in celebration of your victory. The road continues..."
+    },
+
+    "19": {
+        "the_question": "The goblin manages to flee off the road and disappears into the trees. Having driven the creature off, you guide the cart around the trap. Then, goblins begin to emerge out of the trees on both sides, approaching menacingly. Five, ten, more than a dozen. Reinforcements.",
+        "answer_a": "Fight!",
+        "a_id": 21,
+        "answer_b": "Flee",
+        "b_id": 22
+    },
+
+    "21": {
+        "the_question": "You cut down one of the approaching goblins, and another, then you feel a unbelievably sharp pain in your back, looking down to see a set of bloody claws poking out through your chest. Your legs turn to jelly and the world turns to black."
+    },
+
+    "22": {
+        "the_question": "You run away, before they can surround you, Jarret follows at your heel. You hear the drover screaming in the distance behind you as the goblins tear him to shreds. You failed the mission, but at least you're still alive. Jarret starts talking about the next job..."
+    },
+
+    "10": {
+        "the_question": "The goblin is unexpectedly moved by this dramatic and emotional display of grief and steps forward, reaching a hand out in sympathy.",
+        "answer_a": "Let the goblin near.",
+        "a_id": 12,
+        "answer_b": "Lunge at the goblin.",
+        "b_id": 11
+    },
+
+    "11": {
+        "the_question": "Now that you're alone, the goblin meets your charge, claws first. Its stocky chest is wrapped in beaten leather armour.",
+        "answer_a": "Slash",
+        "a_id": 27,
+        "answer_b": "Stab",
+        "b_id": 15
+    },
+
+    "27": {
+        "the_question": "Your cut gashes the goblin's leather armour, but does not hit flesh. The goblins claws slice through your jugular in a flash. You gurgle and collapse at its feet."
+    },
+
+
+    "12": {
+        "the_question": "The goblin reaches up and places a comforting hand on your shoulder. He cannot speak the human tongue, but it is clear in his body language that he regrets his actions.",
+        "answer_a": "Accept his sympathy.",
+        "a_id": 14,
+        "answer_b": "Stab the goblin.",
+        "b_id": 15
+    },
+
+
+    "14": {
+        "the_question": "The goblin apologetically helps you retrieve Jarret's body from the pit, digs a respectful grave for him with its claws and shows the cart drover the way around its trap. He bows his head and beckons you on your way.",
+        "answer_a": "Nod meaningfully to the goblin",
+        "a_id": 16,
+        "answer_b": "Refuse to look at the goblin",
+        "b_id": 17
+    },
+
+    "15": {
+        "the_question": "You take the goblin by the wrist and plunge your broadsword through its neck. It dies, eyes wide in surprise. You guide the cart around the trap and the drover looks at you with terrified eyes. Good, you think to yourself. The road continues..."
+    },
+
+    "16": {
+        "the_question": "You press on with the cart, and the goblin walks away a changed man (or humanoid), intent on cleaning up his act and living a good life. He will never forget Jarret. The road continues..."
+    },
+
+    "17": {
+        "the_question": "The goblin slumps his shoulders and you press on down the road. You hear a sharp scream from behind, and look back to see the goblin, wracked with guilt, has thrown himself into his own spike pit. The road continues..."
+    }
+
+
+
+}
+
