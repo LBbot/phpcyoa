@@ -89,7 +89,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         <!-- <label for="username">Username: </label>
         <input type="text" id="username" name="username" maxlength="25"><br> -->
 
-        <label for="email">Email address: </label>
+        <label for="email">Username: </label>
         <input class="form-textbox" type="text" id="email" name="email" maxlength="256"><br>
 
         <label for="password">Password: </label>

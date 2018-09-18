@@ -55,7 +55,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 ?>
 
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method = "post">
-        <label for="email">Email address: </label>
+        <label for="email">Username: </label>
         <input class="form-textbox" type="text" id="email" name="email" maxlength="256"><br>
 
         <label for="password">Password: </label>

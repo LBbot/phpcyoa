@@ -33,6 +33,10 @@ if (array_key_exists("answer_a", $json_data[$current_ID])) {
     $answer_b = $json_data[$current_ID]["answer_b"];
     $b_id = $json_data[$current_ID]["b_id"];
 }
+if (array_key_exists("answer_c", $json_data[$current_ID])) {
+    $answer_c = $json_data[$current_ID]["answer_c"];
+    $c_id = $json_data[$current_ID]["c_id"];
+}
 
 // If user saves, they POST their current chapter to the DB (but we still do all the aforementioned get stuff)
 if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -113,13 +117,24 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             >
         </form>
 
-
         <form method = "post">
             <input
                 class="unimportant-button"
                 type="submit"
                 name="<?php echo $current_ID; ?>"
                 value="Save progress"
+            >
+        </form>
+    <?php endif; ?>
+
+    <!-- in case of single answer, we use c, no save button -->
+    <?php if (isset($c_id)): ?>
+        <form method = "get">
+            <input
+                type="submit"
+                class = "custom-button"
+                name="<?php echo $c_id; ?>"
+                value="<?php echo $answer_c; ?>"
             >
         </form>
     <?php endif; ?>

@@ -19,6 +19,10 @@ h1 {
     margin-top: 0px;
 }
 
+input {
+    -webkit-appearance: none;
+}
+
 .container {
     margin: 0 auto;
     max-width: 600px;
@@ -108,4 +112,11 @@ a:hover, a:active {
     border: 1px solid white;
 }
 
-
+@media (max-height: 600px) {
+    /* Here we reset the vertical centering because it cuts off text on stumpy screens */
+    .game-container {
+        position: static;
+        top: 0%;
+        transform: translateY(-0%);
+    }
+}

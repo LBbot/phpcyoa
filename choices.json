@@ -1,4 +1,12 @@
 {
+    "0": {
+        "the_question": "Oh dear. You are dead."
+    },
+
+    "100": {
+        "the_question": "Congratulations, the adventure continues."
+    },
+
     "1": {
         "the_question": "You are a mercenary tasked with escorting a goods-laden cart down a dangerous road. Pacing ahead of the cart with your fellow mercenary Jarret, you spy a goblin in the middle of the road. Jarret shouts, 'Look! We should kill it!'",
         "answer_a": "Attack!",
@@ -8,7 +16,7 @@
     },
 
     "2": {
-        "the_question": "You agree to attack the goblin, drawing your broadsword from its sheath. Do you...",
+        "the_question": "You agree to attack the goblin, drawing your broadsword from its sheath. The goblin stares at you, perfectly still. Do you...",
         "answer_a": "Charge!",
         "a_id": 4,
         "answer_b": "Approach carefully.",
@@ -19,12 +27,14 @@
         "the_question": "You talk Jarret out of attacking the lone goblin. 'What else do you suggest?' he asks.",
         "answer_a": "Talk to the goblin.",
         "a_id": 6,
-        "answer_b": "Let's wait...",
+        "answer_b": "Let's just wait...",
         "b_id": 7
     },
 
     "4": {
-        "the_question": "You charge forward. Halfway to the goblin, the ground gives way underneath your feet - a trap! The last thing you see is a pit of wooden spikes hurtling towards you."
+        "the_question": "You charge forward. Halfway to the goblin, the ground gives way underneath your feet - a trap! The last thing you see is a pit of wooden spikes hurtling towards you.",
+        "answer_c": "Continue",
+        "c_id": 0
     },
 
     "5": {
@@ -36,19 +46,30 @@
     },
 
     "6": {
-        "the_question": "You try to talk to the goblin, then remember you don't speak goblin. You've made a fool of yourself in front of Jarret, the drover, and the goblin. You immediately die of shame."
+        "the_question": "You try to talk to the goblin, then remember you don't speak goblin. You've made a fool of yourself in front of Jarret, the driver of the cart, and the goblin. You almost die of shame. Now what?",
+        "answer_a": "Attack",
+        "a_id": 2,
+        "answer_b": "Wait",
+        "b_id": 7
     },
 
     "7": {
-        "the_question": "You wait, fingers brushing the hilt of your weapon, sweaty with anticipation...until the goblin gets frustrated and beckons you, jabbing a finger at a discoloured section of the road, stones and twigs suspiciously arranged in a wide circle. A trap.",
-        "answer_a": "Oblige the goblin and step into the trap",
+        "the_question": "You wait, fingers brushing the hilt of your weapon, sweaty with anticipation...",
+        "answer_c": "Continue",
+        "c_id": 30
+    },
+    "30": {
+        "the_question": "The goblin gets frustrated by all this standing around and beckons you closer, jabbing a clawpoint at a discoloured section of the road, stones and twigs suspiciously arranged in a wide circle. A trap.",
+        "answer_a": "Oblige the goblin and step onto the trap",
         "a_id": 23,
         "answer_b": "Laugh at the goblin for revealing its trap",
         "b_id": 24
     },
 
     "23": {
-        "the_question": "The discoloured ground crumbles under your feet. The last thing you see is a pit of wooden spikes hurtling towards you. But at least you made the goblin feel better."
+        "the_question": "The discoloured ground crumbles under the weight of your foot and you tumble into a pit. The last thing you see is an arrangement of wooden spikes hurtling towards you. But you did make the goblin feel a little less embarrassed - so there's that.",
+        "answer_c": "Continue",
+        "c_id": 0
     },
 
     "24": {
@@ -60,16 +81,16 @@
     },
 
     "25": {
-        "the_question": "You and Jarret draw your broadswords and leap over the trap to the other side, where the goblin now looks rather alarmed and starts backing away.",
-        "answer_a": "Charge!",
-        "a_id": 18,
-        "answer_b": "Approach carefully",
-        "b_id": 19
+        "the_question": "You and Jarret draw your broadswords.",
+        "answer_c": "Continue",
+        "c_id": 29
     },
 
 
     "26": {
-        "the_question": "You guide the cart around the trap, keeping an eye on the dejected goblin. He eventually slinks off in embarrassment. You press on, chuckling. The road continues..."
+        "the_question": "You guide the cart around the trap, keeping an eye on the dejected goblin. He eventually slinks off in embarrassment. You and Jarret can only chuckle. You press on.",
+        "answer_c": "Continue",
+        "c_id": 100
     },
 
     "8": {
@@ -81,7 +102,14 @@
     },
 
     "9": {
-        "the_question": "'It's a trap!' you call out to Jarret, pointing to the discolored ground. You both leap over it to the other side, where the goblin now looks rather alarmed and starts backing away.",
+        "the_question": "'It's a trap!' you call out to Jarret, pointing to the discolored ground.",
+        "answer_c": "Continue",
+        "c_id": 29
+
+    },
+
+    "29": {
+        "the_question": "You and Jarret leap over the trap, rolling like action heroes as you land on the other side. The goblin now looks rather alarmed and starts backing away.",
         "answer_a": "Charge!",
         "a_id": 18,
         "answer_b": "Approach carefully",
@@ -97,11 +125,18 @@
     },
 
     "20": {
-        "the_question": "You cut the goblin's legs out from under it and take turns with Jarret stabbing it to death. Then you guide the cart around the trap, enjoying some bread with the drover in celebration of your victory. The road continues..."
+        "the_question": "You cut the goblin's legs out from under it and take turns with Jarret gleefully stabbing the short ragged creature to death. Then you guide the cart around the trap, enjoying some bread with the driver in celebration of your epic victory.",
+        "answer_c": "Continue",
+        "c_id": 100
     },
 
     "19": {
-        "the_question": "The goblin manages to flee off the road and disappears into the trees. Having driven the creature off, you guide the cart around the trap. Then, goblins begin to emerge out of the trees on both sides, approaching menacingly. Five, ten, more than a dozen. Reinforcements.",
+        "the_question": "The goblin manages to flee off the road and disappears into the trees. Having driven the creature off, you guide the cart around the trap.",
+        "answer_c": "Continue",
+        "c_id": 28
+    },
+    "28": {
+        "the_question": "More goblins begin to emerge out of the trees on both sides, approaching menacingly. Five, then ten, then more than a dozen. Reinforcements.",
         "answer_a": "Fight!",
         "a_id": 21,
         "answer_b": "Flee",
@@ -109,11 +144,22 @@
     },
 
     "21": {
-        "the_question": "You cut down one of the approaching goblins, and another, then you feel a unbelievably sharp pain in your back, looking down to see a set of bloody claws poking out through your chest. Your legs turn to jelly and the world turns to black."
+        "the_question": "You cut down one of the approaching goblins, and another.",
+        "answer_c": "Continue",
+        "c_id": 31
     },
 
+    "31": {
+        "the_question": "Then you feel a unbelievable sharp pain in your back and look down to see a set of bloody claws poking out through your chest. You reflect that two against a dozen was probably a silly idea. But at least the shareholders will know you committed to the job.",
+        "answer_c": "Continue",
+        "c_id": 0
+    },
+
+
     "22": {
-        "the_question": "You run away, before they can surround you, Jarret follows at your heel. You hear the drover screaming in the distance behind you as the goblins tear him to shreds. You failed the mission, but at least you're still alive. Jarret starts talking about the next job..."
+        "the_question": "You run away, before they can surround you, Jarret follows at your heel. You hear the cart driver screaming in the distance behind you as the goblins tear him to shreds. You failed the mission, but at least you're still alive. Jarret starts talking about the next job...",
+        "answer_c": "Continue",
+        "c_id": 100
     },
 
     "10": {
@@ -133,12 +179,50 @@
     },
 
     "27": {
-        "the_question": "Your cut gashes the goblin's leather armour, but does not hit flesh. The goblins claws slice through your jugular in a flash. You gurgle and collapse at its feet."
+        "the_question": "Your cut gashes the goblin's leather armour, but does not reach flesh. In a flash, the goblin's claws slice through your right forearm. The limb and your sword drop to the dirt.",
+        "answer_a": "Flee!",
+        "a_id": 36,
+        "answer_b": "'T'is but a scratch.'",
+        "b_id": 37
+    },
+
+    "36": {
+        "the_question": "You escape back down the path, leaving the cart and driver behind. Night falls, and despite tending to your wounds, you're in a barren road in the middle of a dangerous goblin-filled forest, unarmed, bleeding and probably infected. Outcome: not brilliant.",
+        "answer_c": "Continue",
+        "c_id": 0
+    },
+
+    "37": {
+        "the_question": "You pick up your sword in your left hand, stating 'I've had worse'. The goblin promptly takes that arm too.",
+        "answer_a": "Flee!",
+        "a_id": 36,
+        "answer_b": "'Just a flesh wound!'",
+        "b_id": 38
+    },
+
+    "38": {
+        "the_question": "You kick the goblin. Annoyed and befuddled, it casually slices off your kicking leg.",
+        "answer_a": "Flee!",
+        "a_id": 36,
+        "answer_b": "'Right, I'll do you for that!'",
+        "b_id": 39
+    },
+
+    "39": {
+        "the_question": "You hop at the goblin on your remaining limb and repeatedly bump it with your shoulder and chest. The goblin sighs and slices your hopping leg.",
+        "answer_c": "'Alright, we'll call it a draw.'",
+        "c_id": 40
+    },
+
+    "40": {
+        "the_question": "Looking down at your limbless torso, the goblin claps its clawed hands together in appreciation of your persistence and commitment to the Monty Python reference. It decides to spare you and the cart, stalking back into the woods.",
+        "answer_c": "'Running away, eh? You yellow bastard! Come back here and take what's coming to ya! I'll bite your legs off!'",
+        "c_id": 100
     },
 
 
     "12": {
-        "the_question": "The goblin reaches up and places a comforting hand on your shoulder. He cannot speak the human tongue, but it is clear in his body language that he regrets his actions.",
+        "the_question": "The goblin reaches up and places a comforting claw on your shoulder. He cannot speak the human tongue, but it is clear in his body language that he deeply regrets his actions.",
         "answer_a": "Accept his sympathy.",
         "a_id": 14,
         "answer_b": "Stab the goblin.",
@@ -147,7 +231,7 @@
 
 
     "14": {
-        "the_question": "The goblin apologetically helps you retrieve Jarret's body from the pit, digs a respectful grave for him with its claws and shows the cart drover the way around its trap. He bows his head and beckons you on your way.",
+        "the_question": "The goblin apologetically helps you retrieve Jarret's body from the pit, digs a respectful grave for him with its claws and shows the cart driver the way around its trap. He bows his head and beckons you on your way.",
         "answer_a": "Nod meaningfully to the goblin",
         "a_id": 16,
         "answer_b": "Refuse to look at the goblin",
@@ -155,15 +239,49 @@
     },
 
     "15": {
-        "the_question": "You take the goblin by the wrist and plunge your broadsword through its neck. It dies, eyes wide in surprise. You guide the cart around the trap and the drover looks at you with terrified eyes. Good, you think to yourself. The road continues..."
+        "the_question": "You take the goblin by the wrist and plunge your broadsword through its neck.",
+        "answer_a": "Say something clever",
+        "a_id": 32,
+        "answer_b": "Stare menacingly",
+        "b_id": 33
+    },
+
+    "32": {
+        "the_question": "You hurriedly try and think of a line",
+        "answer_a": "Caught you in the NECK of time!",
+        "a_id": 34,
+        "answer_b": "Get the POINT?",
+        "b_id": 35
+    },
+
+    "34": {
+        "the_question": "Over the gurgling, choking sounds of the dying goblin, you're quite sure you hear the cart driver booing you. Embarrassed, you guide the cart around the trap and never speak of this again.",
+        "answer_c": "Continue",
+        "c_id": 100
+    },
+
+    "35": {
+        "the_question": "The cart driver cheers triumphantly at your epic victory. Chest puffed out, you guide the cart around the trap. But inwardly you know you definitely stole that quip from something and the secret shame weighs on you.",
+        "answer_c": "Continue",
+        "c_id": 100
+    },
+
+    "33": {
+        "the_question": "You watch it die, eyes wide in surprise. As you guide the cart around the trap, the driver looks at you with fear. You think to yourself: good.",
+        "answer_c": "Continue",
+        "c_id": 100
     },
 
     "16": {
-        "the_question": "You press on with the cart, and the goblin walks away a changed man (or humanoid), intent on cleaning up his act and living a good life. He will never forget Jarret. The road continues..."
+        "the_question": "You press on with the cart, and the goblin walks away a changed man (or humanoid), intent on cleaning up his act and living a good life. He will never forget Jarret.",
+        "answer_c": "Continue",
+        "c_id": 100
     },
 
     "17": {
-        "the_question": "The goblin slumps his shoulders and you press on down the road. You hear a sharp scream from behind, and look back to see the goblin, wracked with guilt, has thrown himself into his own spike pit. The road continues..."
+        "the_question": "The goblin slumps his shoulders and you press on down the road. You hear a sharp scream from behind, and look back to see the goblin, wracked with guilt, has thrown himself into his own spike pit.",
+        "answer_c": "Continue",
+        "c_id": 100
     }
 
 
