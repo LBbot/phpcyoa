@@ -15,7 +15,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // 404 or database error catching with try/catch
     try {
         // Check for duplicate username, by getting Couch view of emails with key of the email posted
-        $response = $client->request("GET", "phpusers/_design/views/_view/emails-and-passwords?key=\"{$_POST["email"]}\"");
+        $couchViewAndKey = "phpusers/_design/views/_view/emails-and-passwords?key=\"{$_POST["email"]}\"";
+        $response = $client->request("GET", $couchViewAndKey);
         $json = $response->getBody()->getContents();
         $decoded_json = json_decode($json, true);
         $couch_rows_arr = $decoded_json["rows"];
