@@ -80,7 +80,7 @@ include_once "head.php";
 // If any errors: show them
 if (!empty($input_error_array)) {
     foreach ($input_error_array as $single_error) {
-        echo "<h3>- $single_error</h3>";
+        echo "<h3>$single_error</h3>";
     }
 }
 

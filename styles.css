@@ -19,6 +19,19 @@ h1 {
     margin-top: 0px;
 }
 
+h3 {
+    /* border: 1px solid #520101; */
+    /* border-radius: 10px; */
+    /* background-color: #cc0000; */
+    /* padding: 15px 10px; */
+    width: 95%;
+    margin: 15px auto;
+    text-decoration: none;
+    font-weight: normal;
+    /* text-align: left; */
+    color: rgb(245, 105, 105);
+}
+
 input {
     -webkit-appearance: none;
 }
