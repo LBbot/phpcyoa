@@ -17,7 +17,7 @@ $current_ID = (array_keys($_GET)[0]);
 // Get JSON file from File System and read it (automatically closes)
 $json = file_get_contents('./choices.json');
 // Decode JSON
-$json_data = json_decode($json,true);
+$json_data = json_decode($json, true);
 
 // If number in url ? query does not exist in JSON, redirect to page 1
 if (!isset($json_data[$current_ID]["the_question"])) {
@@ -39,7 +39,7 @@ if (array_key_exists("answer_c", $json_data[$current_ID])) {
 }
 
 // If user saves, they POST their current chapter to the DB (but we still do all the aforementioned get stuff)
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // If $_post includes "save progress" via pressing the save button
     if (in_array("Save progress", $_POST)) {
         // 404 or database error catching with try/catch
@@ -90,16 +90,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 <div class = "game-container">
 
 <?php
-    if (isset($save_message) && !empty($save_message)) {
-        echo "<p class=\"save-message\">" . $save_message . "</p>";
-    }
+if (isset($save_message) && !empty($save_message)) {
+    echo "<p class=\"save-message\">" . $save_message . "</p>";
+}
 ?>
 
     <p class="prose"><?php
         echo $the_question;
     ?></p>
 
-    <?php if (isset($a_id) && isset($b_id)): ?>
+    <?php if (isset($a_id) && isset($b_id)) : ?>
         <form method = "get">
             <input
                 type="submit"
@@ -128,7 +128,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <?php endif; ?>
 
     <!-- in case of single answer, we use c, no save button -->
-    <?php if (isset($c_id)): ?>
+    <?php if (isset($c_id)) : ?>
         <form method = "get">
             <input
                 type="submit"

@@ -20,23 +20,23 @@ if (!isset($_SESSION["email"]) || empty($_SESSION["email"])) {
     </form>
 
     <?php
-        // 404 or database error catching with try/catch
-        try {
-            $email = $_SESSION["email"];
-            $response = $client->request("GET", "phpusers/_design/views/_view/emails-and-passwords?key=\"{$email}\"");
-            $json = $response->getBody()->getContents();
-            $decoded_json = json_decode($json, true);
-            $couch_rows_arr = $decoded_json["rows"];
-            $id_to_update = $couch_rows_arr[0]["id"];
+    // 404 or database error catching with try/catch
+    try {
+        $email = $_SESSION["email"];
+        $response = $client->request("GET", "phpusers/_design/views/_view/emails-and-passwords?key=\"{$email}\"");
+        $json = $response->getBody()->getContents();
+        $decoded_json = json_decode($json, true);
+        $couch_rows_arr = $decoded_json["rows"];
+        $id_to_update = $couch_rows_arr[0]["id"];
 
-            $response = $client->request("GET", "/phpusers/$id_to_update");
-            $json = $response->getBody()->getContents();
-            $decoded_json = json_decode($json, true);
+        $response = $client->request("GET", "/phpusers/$id_to_update");
+        $json = $response->getBody()->getContents();
+        $decoded_json = json_decode($json, true);
 
-        } catch (Exception $e) {
-            $custom_error = "Error connecting to database. Please try again later.";
-            echo $custom_error;
-        }
+    } catch (Exception $e) {
+        $custom_error = "Error connecting to database. Please try again later.";
+        echo $custom_error;
+    }
     ?>
 
 

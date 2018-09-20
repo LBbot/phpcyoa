@@ -94,7 +94,7 @@
     },
 
     "8": {
-        "the_question": "You launch yourself over the trap, boots skidding in the mud on the other side. Jarret, distracted by this feat of athleticism, steps on the discoloured ground which collapses and drops him into a pit of stakes which brutally skewer him to death.",
+        "the_question": "You launch yourself over the trap, boots skidding in the mud on the other side. Jarret, distracted by this feat of athleticism, steps on the discoloured ground. It collapses and drops him into a pit of stakes which brutally skewer him to death.",
         "answer_a": "Scream 'NOOOOOOOO!'",
         "a_id": 10,
         "answer_b": "Shrug. You get his cut of the pay.",
@@ -247,7 +247,7 @@
     },
 
     "32": {
-        "the_question": "You hurriedly try and think of a line",
+        "the_question": "You hurriedly try and think of a line.",
         "answer_a": "Caught you in the NECK of time!",
         "a_id": 34,
         "answer_b": "Get the POINT?",

@@ -6,7 +6,7 @@ if (isset($_SESSION["email"]) && !empty($_SESSION["email"])) {
     header("location: profile.php");
 }
 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Empty array for errors to start
     $input_error_array = array();
@@ -64,7 +64,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         ]);
 
         // Checks for confirmation
-        if ($response->getBody()){
+        if ($response->getBody()) {
             echo "Success!";
             header("location: login.php");
         } else {
@@ -73,15 +73,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
 }
 
-    // Set up page title and <head>/header
-    $page_title = "Register an account - PHP CYOA";
-    include_once "head.php";
+// Set up page title and <head>/header
+$page_title = "Register an account - PHP CYOA";
+include_once "head.php";
 
-    // If any errors: show them
-    if (!empty($input_error_array)) {
-        foreach($input_error_array as $single_error)
+// If any errors: show them
+if (!empty($input_error_array)) {
+    foreach ($input_error_array as $single_error) {
         echo "<h3>- $single_error</h3>";
     }
+}
 
 ?>
 
