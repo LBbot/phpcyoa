@@ -65,8 +65,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Checks for confirmation
         if ($response->getBody()) {
-            echo "Success!";
-            header("location: login.php");
+            $_SESSION["email"] = $_POST["email"];
+            header("location: profile.php");
         } else {
             array_push($input_error_array, "There was a problem posting to database.");
         }
