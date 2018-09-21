@@ -44,8 +44,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (in_array("Save progress", $_POST)) {
         // 404 or database error catching with try/catch
         try {
-            //Get doc by user email to get ID
-            $email = $_SESSION["email"];
+            //Get doc by user email, replace any plus signs with unicode so query does not break
+            $email = str_replace("+", "%2B", $_SESSION["email"]);
+            // Get doc ID from view query result
             $response = $client->request("GET", "phpusers/_design/views/_view/emails-and-passwords?key=\"{$email}\"");
             $json = $response->getBody()->getContents();
             $decoded_json = json_decode($json, true);

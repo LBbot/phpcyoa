@@ -22,7 +22,8 @@ if (!isset($_SESSION["email"]) || empty($_SESSION["email"])) {
     <?php
     // 404 or database error catching with try/catch
     try {
-        $email = $_SESSION["email"];
+        // Replace any pluses so they don't break the Couch query
+        $email = str_replace("+", "%2B", $_SESSION["email"]);
         $response = $client->request("GET", "phpusers/_design/views/_view/emails-and-passwords?key=\"{$email}\"");
         $json = $response->getBody()->getContents();
         $decoded_json = json_decode($json, true);
