@@ -1,8 +1,10 @@
 <?php
 require "db.php";
+require "session_cookie_checker.php";
 session_start();
 
-if (isset($_SESSION["email"]) && !empty($_SESSION["email"])) {
+// Check if session cookie or token cookie and if so: send logged in user to profile
+if (session_cookie_check()) {
     header("location: profile.php");
 }
 
@@ -21,9 +23,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Check for duplicate username, by getting Couch view of emails with key of the email posted
 
             // If any + signs in email address, replace them with unicode so it doesn't break the Couch query.
-            $plus_sign_email_converter = str_replace("+", "%2B", $_POST["email"]);
+            $urlencoded_email = urlencode($_POST["email"]);
 
-            $couchViewAndKey = "phpusers/_design/views/_view/emails-and-passwords?key=\"{$plus_sign_email_converter}\"";
+            // Get doc from Couch
+            $couchViewAndKey = "phpusers/_design/views/_view/emails-and-passwords?key=\"{$urlencoded_email}\"";
             $response = $client->request("GET", $couchViewAndKey);
             $json = $response->getBody()->getContents();
             $decoded_json = json_decode($json, true);
@@ -42,7 +45,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 
             if (empty($input_error_array)) {
+                // Create a random token
+                $token = bin2hex(random_bytes(12));
+
+                // Set bcrypt rounds, then hash token with them.
+                $options = ["cost" => 12];
+                $hashedToken = password_hash($token, PASSWORD_BCRYPT, $options);
+
+                // Get the full doc with the ID so we can add the token to it
+                $name_id = $couch_rows_arr[0]["id"];
+                $response = $client->request("GET", "/phpusers/$name_id");
+                $json = $response->getBody()->getContents();
+                $decoded_json = json_decode($json, true);
+
+                // To stop CouchDB filling up with old expired token hashes, when we reach a certain number - we delete
+                // the first one in the array before we add a new one to the end
+                if (count($decoded_json["cookie_tokens"]) > 2) {
+                    array_shift($decoded_json["cookie_tokens"]);
+                }
+
+                // Push the token to the cookie_tokens array
+                array_push($decoded_json["cookie_tokens"], $hashedToken);
+                // Actually re-encode and send the json back with a PUT
+                $response = $client->request("PUT", "/phpusers/$name_id", [
+                    "json" => $decoded_json
+                ]);
+
+                // If that's successful let's actually log the user in! Start with creating a session with user's email
                 $_SESSION["email"] = $couch_rows_arr[0]["key"];
+                // Set expiry for cookie
+                $thirtyDaysExpiry = time() + 86400 * 30;
+                // Put users email (e) and raw token (t) in an ASSOCIATIVE ARRAY flattened to an encoded json STRING
+                // so we can put both into the value of the cookie and decode when we need it
+                $email_and_token = (json_encode(array("e" => $couch_rows_arr[0]["key"], "t" => $token)));
+                // HTTPS (boolean 1 of 2) set to false because localhost. SET IT TO TRUE ON A SERVER WITH SSL
+                setcookie("et_cookie", $email_and_token, $thirtyDaysExpiry, "/", "", false, false);
+                // And FINALLY redirect user to profile
                 header("location: profile.php");
             }
         } catch (Exception $e) {

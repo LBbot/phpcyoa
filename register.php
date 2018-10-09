@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // If no errors, hash password, add date, post to couch and redirect to login
     if (empty($input_error_array)) {
         // Set the rounds on bcrypt for password hashing
-        $options = ["cost" => 12]; // TODO: try removing this comma
+        $options = ["cost" => 12];
         // replace password with hashed one
         $_POST["password"] = password_hash($_POST["password"], PASSWORD_BCRYPT, $options);
 
@@ -66,6 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // We push key/value pairs to associative array by defining it kinda like a property
         $_POST["date"] = date(DATE_ATOM);
         $_POST["readable_date"] = date("H:i:sA D d/m/Y");
+        $_POST["cookie_tokens"] = [];
         // ACTUALLY POST TO COUCH
         $response = $client->request("POST", "phpusers", [
             "json" => $_POST

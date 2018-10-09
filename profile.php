@@ -1,16 +1,17 @@
 <?php
 require "db.php";
+require "session_cookie_checker.php";
 session_start();
 
-if (!isset($_SESSION["email"]) || empty($_SESSION["email"])) {
+// Check if no session cookie or token cookie and if so: send user back to login
+if (session_cookie_check() === false) {
     header("location: login.php");
 }
 
-    // Set up page title and <head>/header, and container
-    $page_title = "Your account - PHP CYOA";
-    include_once "head.php";
+// Set up page title and <head>/header, and container
+$page_title = "Your account - PHP CYOA";
+include_once "head.php";
 ?>
-
 
     <!-- escape any of the users characters we're displaying back to them -->
     <h2><?php echo htmlspecialchars($_SESSION["email"]); ?></h2>
@@ -22,8 +23,9 @@ if (!isset($_SESSION["email"]) || empty($_SESSION["email"])) {
     <?php
     // 404 or database error catching with try/catch
     try {
-        // Replace any pluses so they don't break the Couch query
-        $email = str_replace("+", "%2B", $_SESSION["email"]);
+        // URLencode so it will replace any pluses (for example) and avoid breaking the Couch query
+        $email = urlencode($_SESSION["email"]);
+
         $response = $client->request("GET", "phpusers/_design/views/_view/emails-and-passwords?key=\"{$email}\"");
         $json = $response->getBody()->getContents();
         $decoded_json = json_decode($json, true);
