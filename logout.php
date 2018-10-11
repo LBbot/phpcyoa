@@ -1,6 +1,13 @@
 <?php
-session_start();
 require "db.php";
+require "session_cookie_checker.php";
+session_start();
+
+
+// Check if no session cookie or token cookie and if so user shouldn't be here so send them back to login
+if (session_cookie_check() === false) {
+    header("location: login.php");
+}
 
 // Get email from session before we destroy it
 // URLencode so it will replace any pluses (for example) and avoid breaking the Couch query

@@ -1,8 +1,10 @@
 <?php
 require "db.php";
+require "session_cookie_checker.php";
 session_start();
 
-if (isset($_SESSION["email"]) && !empty($_SESSION["email"])) {
+// Check if session cookie or token cookie and if so: send logged in user to profile
+if (session_cookie_check()) {
     header("location: profile.php");
 }
 
@@ -67,6 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_POST["date"] = date(DATE_ATOM);
         $_POST["readable_date"] = date("H:i:sA D d/m/Y");
         $_POST["cookie_tokens"] = [];
+        $_POST["activation_code"] = bin2hex(random_bytes(4));
         // ACTUALLY POST TO COUCH
         $response = $client->request("POST", "phpusers", [
             "json" => $_POST
@@ -74,8 +77,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Checks for confirmation
         if ($response->getBody()) {
-            $_SESSION["email"] = $_POST["email"];
-            header("location: profile.php");
+            // Sending email address TODO: change this to actual url or whatever
+            $email = "totallyrealemail@hotmail.com";
+            // Recipient email address
+            $to = $_POST["email"];
+            $subject = "PHPCYOA - complete your registration!";
+            $message = "Your email has been registered for PHPCYOA. To activate your account, simply enter the following code on the activation screen: \n" . $_POST["activation_code"] . "\nIf you did not register, you can just ignore this. Otherwise, we hope you enjoy the game!";
+
+            // Create email headers
+            $headers = "From: " . $email . "\r\n" .
+            "Reply-To: ". $email . "\r\n" .
+            "X-Mailer: PHP/" . phpversion();
+
+            // Sending email
+            if (mail($to, $subject, $message, $headers)) {
+                $_SESSION["unconfirmed_email"] = $_POST["email"];
+                header("location: account_activation.php");
+            } else {
+                array_push($input_error_array, "Unable to send email. Please try again!");
+            }
+
         } else {
             array_push($input_error_array, "There was a problem posting to database.");
         }
