@@ -1,11 +1,16 @@
 <?php
-require "db.php";
 require "session_cookie_checker.php";
+require "couch_functions.php";
 session_start();
 
 // Check if session cookie or token cookie and if so: send logged in user to profile
 if (session_cookie_check()) {
     header("location: profile.php");
+}
+
+// Check if user has unactivated account and redirect to activation page if so.
+if (isset($_SESSION["unconfirmed_email"]) && !empty($_SESSION["unconfirmed_email"])) {
+    header("location: account_activation.php");
 }
 
 // if form is posted
@@ -26,18 +31,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $urlencoded_email = urlencode($_POST["email"]);
 
             // Get doc from Couch
-            $couchViewAndKey = "phpusers/_design/views/_view/emails-and-passwords?key=\"{$urlencoded_email}\"";
-            $response = $client->request("GET", $couchViewAndKey);
-            $json = $response->getBody()->getContents();
-            $decoded_json = json_decode($json, true);
-            $couch_rows_arr = $decoded_json["rows"];
+            $cpath = "phpusers/_design/views/_view/emails-and-passwords?key=\"{$urlencoded_email}\"&include_docs=true";
+            $couch_output_arr = couch_get_decode_json($cpath);
 
             // If it returns an empty array, the username/email is not in use, so can't check password
-            if (empty($couch_rows_arr)) {
+            if (empty($couch_output_arr)) {
                 array_push($input_error_array, "Email address does not exist.");
             } else { // otherwise let's compare passwords
                 // Password is in the value of the doc
-                $hashed_password = $couch_rows_arr[0]["value"];
+                $hashed_password = $couch_output_arr[0]["value"];
                 // PASSWORD VERIFCATION
                 if (!password_verify($_POST["password"], $hashed_password)) {
                     array_push($input_error_array, "Password is incorrect.");
@@ -45,6 +47,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 
             if (empty($input_error_array)) {
+                // check if account is not activated (confirmed email), if so, redirect to activation page.
+                if ($couch_output_arr[0]["doc"]["activation_code"]!== "activated") {
+                    // We also need to give them a session.
+                    $_SESSION["unconfirmed_email"] = $couch_output_arr[0]["key"];
+                    header("location: account_activation.php");
+                }
+
                 // Create a random token
                 $token = bin2hex(random_bytes(12));
 
@@ -52,32 +61,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $options = ["cost" => 12];
                 $hashedToken = password_hash($token, PASSWORD_BCRYPT, $options);
 
-                // Get the full doc with the ID so we can add the token to it
-                $name_id = $couch_rows_arr[0]["id"];
-                $response = $client->request("GET", "/phpusers/$name_id");
-                $json = $response->getBody()->getContents();
-                $decoded_json = json_decode($json, true);
+                // Get the full doc
+                $fullDoc = $couch_output_arr[0]["doc"];
 
                 // To stop CouchDB filling up with old expired token hashes, when we reach a certain number - we delete
                 // the first one in the array before we add a new one to the end
-                if (count($decoded_json["cookie_tokens"]) > 2) {
-                    array_shift($decoded_json["cookie_tokens"]);
+                if (count($fullDoc["cookie_tokens"]) > 2) {
+                    array_shift($fullDoc["cookie_tokens"]);
                 }
 
                 // Push the token to the cookie_tokens array
-                array_push($decoded_json["cookie_tokens"], $hashedToken);
-                // Actually re-encode and send the json back with a PUT
-                $response = $client->request("PUT", "/phpusers/$name_id", [
-                    "json" => $decoded_json
-                ]);
+                array_push($fullDoc["cookie_tokens"], $hashedToken);
+
+                // Actually re-encode and send the json doc back with a PUT to the ID
+                couch_put_or_post("PUT", $couch_output_arr[0]["id"], $fullDoc);
 
                 // If that's successful let's actually log the user in! Start with creating a session with user's email
-                $_SESSION["email"] = $couch_rows_arr[0]["key"];
+                $_SESSION["email"] = $fullDoc["email"];
                 // Set expiry for cookie
                 $thirtyDaysExpiry = time() + 86400 * 30;
                 // Put users email (e) and raw token (t) in an ASSOCIATIVE ARRAY flattened to an encoded json STRING
                 // so we can put both into the value of the cookie and decode when we need it
-                $email_and_token = (json_encode(array("e" => $couch_rows_arr[0]["key"], "t" => $token)));
+                $email_and_token = (json_encode(array("e" => $fullDoc["email"], "t" => $token)));
                 // HTTPS (boolean 1 of 2) set to false because localhost. SET IT TO TRUE ON A SERVER WITH SSL
                 setcookie("et_cookie", $email_and_token, $thirtyDaysExpiry, "/", "", false, false);
                 // And FINALLY redirect user to profile

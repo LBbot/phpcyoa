@@ -1,6 +1,6 @@
 <?php
 session_start();
-require "db.php";
+require "couch_functions.php";
 require "session_cookie_checker.php";
 
 // Check if no session cookie or token cookie and if so: send user back to login
@@ -48,22 +48,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             //Get doc by user email, replace any plus signs with unicode so query does not break
             $email = urlencode($_SESSION["email"]);
             // Get doc ID from view query result
-            $response = $client->request("GET", "phpusers/_design/views/_view/emails-and-passwords?key=\"{$email}\"");
-            $json = $response->getBody()->getContents();
-            $decoded_json = json_decode($json, true);
-            $couch_rows_arr = $decoded_json["rows"];
-            $id_to_update = $couch_rows_arr[0]["id"];
+            $couchViewKey = "phpusers/_design/views/_view/emails-and-passwords?key=\"{$email}\"&include_docs=true";
+            $couch_rows_arr = couch_get_decode_json($couchViewKey);
 
-            // Use ID to get full doc
-            $response = $client->request("GET", "/phpusers/$id_to_update");
-            $json = $response->getBody()->getContents();
-            $decoded_json = json_decode($json, true);
+            $couch_rows_arr[0]["doc"]["saved_game_number"] = $current_ID;
 
             // PUT saved game page/chapter in doc and send back to Couch
-            $decoded_json["saved_game_number"] = $current_ID;
-            $response = $client->request("PUT", "/phpusers/$id_to_update", [
-                "json" => $decoded_json
-            ]);
+            couch_put_or_post("PUT", $couch_rows_arr[0]["id"], $couch_rows_arr[0]["doc"]);
 
             $save_message = "Saved game (Warning: this will be overwritten next time you save)";
 

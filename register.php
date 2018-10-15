@@ -1,5 +1,5 @@
 <?php
-require "db.php";
+require "couch_functions.php";
 require "session_cookie_checker.php";
 session_start();
 
@@ -8,8 +8,12 @@ if (session_cookie_check()) {
     header("location: profile.php");
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+// Check if user has unactivated account and redirect to activation page if so.
+if (isset($_SESSION["unconfirmed_email"]) && !empty($_SESSION["unconfirmed_email"])) {
+    header("location: account_activation.php");
+}
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Empty array for errors to start
     $input_error_array = array();
 
@@ -34,14 +38,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // 404 or database error catching with try/catch
         try {
             // Check for duplicate email, by getting Couch view of emails with key of the email posted
-            $couchViewAndKey = "phpusers/_design/views/_view/emails-and-passwords?key=\"{$_POST["email"]}\"";
-            $response = $client->request("GET", $couchViewAndKey);
-            $json = $response->getBody()->getContents();
-            $decoded_json = json_decode($json, true);
-            $couch_rows_arr = $decoded_json["rows"];
+            $cpath = "phpusers/_design/views/_view/emails-and-passwords?key=\"{$_POST["email"]}\"";
+            $couch_output_arr = couch_get_decode_json($cpath);
 
             // If it doesn't return an empty array, the email is in use
-            if (empty($couch_rows_arr) === false) {
+            if (empty($couch_output_arr) === false) {
                 array_push($input_error_array, "Email address already in use. Please log in or try another.");
             }
         } catch (Exception $e) {
@@ -70,19 +71,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_POST["readable_date"] = date("H:i:sA D d/m/Y");
         $_POST["cookie_tokens"] = [];
         $_POST["activation_code"] = bin2hex(random_bytes(4));
-        // ACTUALLY POST TO COUCH
-        $response = $client->request("POST", "phpusers", [
-            "json" => $_POST
-        ]);
+        // ACTUALLY POST TO COUCH (use "" because no ID is needed, it's going straight to /phpusers)
+        try {
+            couch_put_or_post("POST", "", $_POST);
 
-        // Checks for confirmation
-        if ($response->getBody()) {
             // Sending email address TODO: change this to actual url or whatever
             $email = "totallyrealemail@hotmail.com";
             // Recipient email address
             $to = $_POST["email"];
             $subject = "PHPCYOA - complete your registration!";
-            $message = "Your email has been registered for PHPCYOA. To activate your account, simply enter the following code on the activation screen: \n" . $_POST["activation_code"] . "\nIf you did not register, you can just ignore this. Otherwise, we hope you enjoy the game!";
+
+            $message = <<<ENDOFHEREDOCTEXT
+Your email has been registered for PHPCYOA. To activate your account, simply visit:
+
+http://localhost:5000/account_activation.php?code={$_POST["activation_code"]}
+
+Or enter the following code on the activation screen:
+
+{$_POST["activation_code"]}
+
+If you did not register, you can just ignore this. Otherwise, we hope you enjoy the game!
+ENDOFHEREDOCTEXT;
 
             // Create email headers
             $headers = "From: " . $email . "\r\n" .
@@ -96,9 +105,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 array_push($input_error_array, "Unable to send email. Please try again!");
             }
-
-        } else {
-            array_push($input_error_array, "There was a problem posting to database.");
+        } catch (Exception $e) {
+            array_push($input_error_array, "Error connecting to database. Please try again later.");
         }
     }
 }
