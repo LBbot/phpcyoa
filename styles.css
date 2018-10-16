@@ -15,6 +15,11 @@ body {
     font-size: x-large;
 }
 
+/* Literally just for displaying emails on the user profile without them extending off the page */
+p {
+    overflow-wrap: break-word;
+}
+
 h1 {
     margin-top: 0px;
 }

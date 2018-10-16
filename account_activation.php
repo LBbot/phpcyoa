@@ -10,7 +10,8 @@ if (!isset($_SESSION["unconfirmed_email"]) || empty($_SESSION["unconfirmed_email
     header("location: login.php");
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" || array_key_exists("code", $_GET)) {
     try {
         // If any plus signs in email address, replace them with unicode so it doesn't break the Couch query.
         $urlencoded_email = urlencode($_SESSION["unconfirmed_email"]);
@@ -20,8 +21,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $couch_rows_arr = couch_get_decode_json($couchViewKey);
 
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $code_input = $_POST["confirmcode"];
+        } else {
+            $code_input = $_GET["code"];
+        }
+
         // CHECK IF CONFIRMATION CODE IS ACTUALLY CORRECT
-        if ($couch_rows_arr[0]["value"] !== $_POST["confirmcode"]) {
+        if ($couch_rows_arr[0]["value"] !== $code_input) {
             echo "Confirmation code is incorrect";
             exit();
         }

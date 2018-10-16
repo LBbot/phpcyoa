@@ -27,7 +27,7 @@ include_once "head.php";
 ?>
 
     <!-- escape any of the users characters we're displaying back to them -->
-    <h2><?php echo htmlspecialchars($user_doc["email"]); ?></h2>
+    <p><?php echo htmlspecialchars($user_doc["email"]); ?></p>
 
     <form method="get" action="gametemplate.php">
         <input type="submit" class="custom-button" name="1" value="Start new game">
