@@ -6,11 +6,13 @@ require "session_cookie_checker.php";
 // Check if no session cookie or token cookie and if so: send user back to login
 if (session_cookie_check() === false) {
     header("location: login.php");
+    exit();
 }
 
 // If no ?query to _GET in URL, redirect to page 1
 if (!isset(array_keys($_GET)[0])) {
     header("location: gametemplate.php?1");
+    exit();
 }
 // Otherwise get number ID of section/chapter/choice/page number.
 $current_ID = (array_keys($_GET)[0]);
@@ -23,6 +25,7 @@ $json_data = json_decode($json, true);
 // If number in url ? query does not exist in JSON, redirect to page 1
 if (!isset($json_data[$current_ID]["the_question"])) {
     header("location: gametemplate.php?1");
+    exit();
 }
 // Otherewise set up variables for the question on load
 $the_question = $json_data[$current_ID]["the_question"];
@@ -59,8 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $save_message = "Saved game (Warning: this will be overwritten next time you save)";
 
         } catch (Exception $e) {
-            $custom_error = "Error connecting to database. Please try again later.";
-            exit(include_once "error.php"); // Will check for the above variable and display it
+            $save_message = "Error connecting to database. WARNING: GAME HAS NOT BEEN SAVED";
         }
     }
 }

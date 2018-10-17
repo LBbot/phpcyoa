@@ -6,11 +6,13 @@ session_start();
 // Check if session cookie or token cookie and if so: send logged in user to profile
 if (session_cookie_check()) {
     header("location: profile.php");
+    exit();
 }
 
 // Check if user has unactivated account and redirect to activation page if so.
 if (isset($_SESSION["unconfirmed_email"]) && !empty($_SESSION["unconfirmed_email"])) {
     header("location: account_activation.php");
+    exit();
 }
 
 // if form is posted
@@ -23,13 +25,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (filter_var(filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL), FILTER_VALIDATE_EMAIL) === false) {
         array_push($input_error_array, "Invalid email");
     } else {
+        // If any + signs in email address, replace them with unicode so it doesn't break the Couch query.
+        $urlencoded_email = urlencode($_POST["email"]);
+
         // 404 or database error catching with try/catch
         try {
             // Check for duplicate username, by getting Couch view of emails with key of the email posted
-
-            // If any + signs in email address, replace them with unicode so it doesn't break the Couch query.
-            $urlencoded_email = urlencode($_POST["email"]);
-
             // Get doc from Couch
             $cpath = "phpusers/_design/views/_view/emails-and-passwords?key=\"{$urlencoded_email}\"&include_docs=true";
             $couch_output_arr = couch_get_decode_json($cpath);
@@ -48,10 +49,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if (empty($input_error_array)) {
                 // check if account is not activated (confirmed email), if so, redirect to activation page.
-                if ($couch_output_arr[0]["doc"]["activation_code"]!== "activated") {
+
+                if ($couch_output_arr[0]["doc"]["activation_code"] !== "activated") {
                     // We also need to give them a session.
                     $_SESSION["unconfirmed_email"] = $couch_output_arr[0]["key"];
                     header("location: account_activation.php");
+                    exit();
                 }
 
                 // Create a random token
@@ -87,6 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 setcookie("et_cookie", $email_and_token, $thirtyDaysExpiry, "/", "", false, false);
                 // And FINALLY redirect user to profile
                 header("location: profile.php");
+                exit();
             }
         } catch (Exception $e) {
             array_push($input_error_array, "Error connecting to database. Please try again later.");

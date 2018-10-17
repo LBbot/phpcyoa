@@ -7,6 +7,7 @@ session_start();
 // Check if no session cookie or token cookie and if so user shouldn't be here so send them back to login
 if (session_cookie_check() === false) {
     header("location: login.php");
+    exit();
 }
 
 // Get the token first so we can delete it later

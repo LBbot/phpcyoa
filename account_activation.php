@@ -8,19 +8,27 @@ session_start();
 // Make sure they have a session for this specifically, else send them back to login
 if (!isset($_SESSION["unconfirmed_email"]) || empty($_SESSION["unconfirmed_email"])) {
     header("location: login.php");
+    exit();
 }
 
+if (isset($_SESSION["error"]) || !empty($_SESSION["error"])) {
+    $input_error_array = array($_SESSION["error"]);
+    unset($_SESSION["error"]);
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" || array_key_exists("code", $_GET)) {
-    try {
-        // If any plus signs in email address, replace them with unicode so it doesn't break the Couch query.
-        $urlencoded_email = urlencode($_SESSION["unconfirmed_email"]);
+    // Empty array for errors to start
+    $input_error_array = array();
 
+    // If any plus signs in email address, replace them with unicode so it doesn't break the Couch query.
+    $urlencoded_email = urlencode($_SESSION["unconfirmed_email"]);
+
+    try {
         // Get doc from Couch
         $couchViewKey = "phpusers/_design/views/_view/emails-and-codes?key=\"{$urlencoded_email}\"&include_docs=true";
-
         $couch_rows_arr = couch_get_decode_json($couchViewKey);
 
+        // Check if we're getting the code from a URL query (?code=1234) or from the submitted form.
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $code_input = $_POST["confirmcode"];
         } else {
@@ -29,59 +37,67 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" || array_key_exists("code", $_GET)) {
 
         // CHECK IF CONFIRMATION CODE IS ACTUALLY CORRECT
         if ($couch_rows_arr[0]["value"] !== $code_input) {
-            echo "Confirmation code is incorrect";
+            array_push($input_error_array, "Confirmation code is incorrect.");
+        }
+
+        if (empty($input_error_array)) {
+            // If confirmation is confirmed then we basically go through the login process.
+            // Create a random token
+            $token = bin2hex(random_bytes(12));
+
+            // Set bcrypt rounds, then hash token with them.
+            $options = ["cost" => 12];
+            $hashedToken = password_hash($token, PASSWORD_BCRYPT, $options);
+
+            // To stop CouchDB filling up with old expired token hashes, when we reach a certain number - we delete
+            // the first one in the array before we add a new one to the end
+            if (count($couch_rows_arr[0]["doc"]["cookie_tokens"]) > 2) {
+                array_shift($couch_rows_arr[0]["doc"]["cookie_tokens"]);
+            }
+
+            $couch_rows_arr[0]["doc"]["activation_code"] = "activated";
+
+            // Push the token to the cookie_tokens array
+            array_push($couch_rows_arr[0]["doc"]["cookie_tokens"], $hashedToken);
+
+            // Actually re-encode and send the json doc back with a PUT to the ID
+            couch_put_or_post("PUT", $couch_rows_arr[0]["id"], $couch_rows_arr[0]["doc"]);
+
+            // Let's actually log the user in! Start with creating a session with user's email
+            // We rewrite and destroy the session first to get rid of ["unconfirmed_email"]
+            $_SESSION = array();
+            session_destroy();
+            $_SESSION["email"] = $couch_rows_arr[0]["key"];
+            // Set expiry for cookie
+            $thirtyDaysExpiry = time() + 86400 * 30;
+            // Put users email (e) and raw token (t) in an ASSOCIATIVE ARRAY flattened to an encoded json STRING
+            // so we can put both into the value of the cookie and decode when we need it
+            $email_and_token = (json_encode(array("e" => $couch_rows_arr[0]["key"], "t" => $token)));
+            // HTTPS (boolean 1 of 2) set to false because localhost. SET IT TO TRUE ON A SERVER WITH SSL
+            setcookie("et_cookie", $email_and_token, $thirtyDaysExpiry, "/", "", false, false);
+            // And FINALLY redirect user to profile
+            header("location: profile.php");
             exit();
         }
 
-        // If confirmation is confirmed then we basically go through the login process.
-        // Create a random token
-        $token = bin2hex(random_bytes(12));
-
-        // Set bcrypt rounds, then hash token with them.
-        $options = ["cost" => 12];
-        $hashedToken = password_hash($token, PASSWORD_BCRYPT, $options);
-
-        // To stop CouchDB filling up with old expired token hashes, when we reach a certain number - we delete
-        // the first one in the array before we add a new one to the end
-        if (count($couch_rows_arr[0]["doc"]["cookie_tokens"]) > 2) {
-            array_shift($couch_rows_arr[0]["doc"]["cookie_tokens"]);
-        }
-
-        $couch_rows_arr[0]["doc"]["activation_code"] = "activated";
-
-        // Push the token to the cookie_tokens array
-        array_push($couch_rows_arr[0]["doc"]["cookie_tokens"], $hashedToken);
-
-        // Actually re-encode and send the json doc back with a PUT to the ID
-        couch_put_or_post("PUT", $couch_rows_arr[0]["id"], $couch_rows_arr[0]["doc"]);
-
-        // Let's actually log the user in! Start with creating a session with user's email
-        // We rewrite and destroy the session first to get rid of ["unconfirmed_email"]
-        $_SESSION = array();
-        session_destroy();
-        $_SESSION["email"] = $couch_rows_arr[0]["key"];
-        // Set expiry for cookie
-        $thirtyDaysExpiry = time() + 86400 * 30;
-        // Put users email (e) and raw token (t) in an ASSOCIATIVE ARRAY flattened to an encoded json STRING
-        // so we can put both into the value of the cookie and decode when we need it
-        $email_and_token = (json_encode(array("e" => $couch_rows_arr[0]["key"], "t" => $token)));
-        // HTTPS (boolean 1 of 2) set to false because localhost. SET IT TO TRUE ON A SERVER WITH SSL
-        setcookie("et_cookie", $email_and_token, $thirtyDaysExpiry, "/", "", false, false);
-        // And FINALLY redirect user to profile
-        header("location: profile.php");
-
     } catch (Exception $e) {
-        $custom_error = "Error connecting to database. Please try again later.";
-        echo $custom_error;
+        array_push($input_error_array, "Error connecting to database. Please try again later.");
     }
 }
 
 // Set up page title and <head>/header
 $page_title = "Register an account - PHP CYOA";
 include_once "head.php";
+
+// If any errors: show them
+if (!empty($input_error_array)) {
+    foreach ($input_error_array as $single_error) {
+        echo "<h3>$single_error</h3>";
+    }
+}
 ?>
 
-<h2><?php echo htmlspecialchars($_SESSION["unconfirmed_email"]); ?></h2>
+<p><?php echo htmlspecialchars($_SESSION["unconfirmed_email"]); ?></p>
 
 <p>A code has been sent to your email address. Click the link in the email OR enter the code the box below to activate
 your account. </p>

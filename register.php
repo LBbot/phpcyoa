@@ -6,11 +6,13 @@ session_start();
 // Check if session cookie or token cookie and if so: send logged in user to profile
 if (session_cookie_check()) {
     header("location: profile.php");
+    exit();
 }
 
 // Check if user has unactivated account and redirect to activation page if so.
 if (isset($_SESSION["unconfirmed_email"]) && !empty($_SESSION["unconfirmed_email"])) {
     header("location: account_activation.php");
+    exit();
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -102,6 +104,7 @@ ENDOFHEREDOCTEXT;
             if (mail($to, $subject, $message, $headers)) {
                 $_SESSION["unconfirmed_email"] = $_POST["email"];
                 header("location: account_activation.php");
+                exit();
             } else {
                 array_push($input_error_array, "Unable to send email. Please try again!");
             }

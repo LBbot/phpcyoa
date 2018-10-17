@@ -7,6 +7,7 @@ session_start();
 // Make sure they have a session for this specifically, else send them back to login
 if (!isset($_SESSION["unconfirmed_email"]) || empty($_SESSION["unconfirmed_email"])) {
     header("location: login.php");
+    exit();
 }
 
 try {
@@ -21,6 +22,7 @@ try {
     // If their code is already activated they shouldn't be loading this page, redirect them to profile
     if ($couch_rows_arr[0]["doc"]["activation_code"] === "activated") {
         header("location: profile.php");
+        exit();
     }
 
     // OTHERWISE WE CONTINUE AND MAKE A NEW CODE, PUT BACK TO THE DB AND SEND A NEW EMAIL
@@ -56,13 +58,15 @@ ENDOFHEREDOCTEXT;
     // Sending email and redirecting to account activation page
     if (mail($to, $subject, $message, $headers)) {
         header("location: account_activation.php");
+        exit();
     } else {
-        array_push($input_error_array, "Unable to send email. Please try again!");
+        $_SESSION["error"] = "Unable to send mail. Please try again later.";
+        header("location: account_activation.php");
+        exit();
     }
 
-
-    header("location: account_activation.php");
-
 } catch (Exception $e) {
-    array_push($input_error_array, "Error connecting to database. Please try again later.");
+    $_SESSION["error"] = "Error connecting to database. Please try again later.";
+    header("location: account_activation.php");
+    exit();
 }
