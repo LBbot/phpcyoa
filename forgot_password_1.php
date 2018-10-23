@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Sending email address TODO: change this to actual url or whatever
                 $email = "totallyrealemail@hotmail.com";
                 // Recipient email address (the key in that Couch view)
-                $to = $couch_rows_arr[0]["key"];
+                $to = $fullDoc["email"];
                 $subject = "PHPCYOA - Reset password";
 
                 $message = <<<ENDOFHEREDOCTEXT
@@ -73,7 +73,7 @@ ENDOFHEREDOCTEXT;
 
                 // Sending email and redirecting to account activation page
                 if (mail($to, $subject, $message, $headers)) {
-                    header("location: forgot_password_2.php");
+                    // header("location: forgot_password_2.php");
                     exit();
                 } else {
                     array_push($input_error_array, "Unable to send mail. Please try again later.");
