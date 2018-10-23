@@ -28,7 +28,8 @@ include_once "head.php";
 ?>
 
     <!-- escape any of the users characters we're displaying back to them -->
-    <p><?php echo htmlspecialchars($user_doc["email"]); ?></p>
+    <p><?php echo htmlspecialchars($user_doc["email"]); ?><br>
+    <a href = "change_email.php">Change email address</a></p>
 
     <form method="get" action="gametemplate.php">
         <input type="submit" class="custom-button" name="1" value="Start new game">
@@ -46,7 +47,7 @@ include_once "head.php";
     <?php endif; ?>
 
 
-
+    <!-- <a href = "change_email.php"><div class = "unimportant-button">Change email address</div></a> -->
     <a href = "logout.php"><div class = "unimportant-button">Logout</div></a>
 
 </div>

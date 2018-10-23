@@ -121,8 +121,10 @@ if (!empty($input_error_array)) {
         <input class="custom-button" type="submit" class="js-submit" value="Log in">
     </form>
 
+
     <p>Don't have an account? <a href = "register.php">Register here</a>.</p>
 
+    <p><a href = "forgot_password.php">Forgotten your password?</a></p>
     </div>
 
 </body>

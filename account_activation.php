@@ -97,10 +97,10 @@ if (!empty($input_error_array)) {
 }
 ?>
 
-<p><?php echo htmlspecialchars($_SESSION["unconfirmed_email"]); ?></p>
+    <p><?php echo htmlspecialchars($_SESSION["unconfirmed_email"]); ?></p>
 
-<p>A code has been sent to your email address. Click the link in the email OR enter the code the box below to activate
-your account. </p>
+    <p>A code has been sent to your email address. Click the link in the email OR enter the code the box below to
+    activate your account. </p>
 
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method = "post">
         <label for="confirmcode">Confirmation code: </label>
