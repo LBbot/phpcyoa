@@ -142,6 +142,5 @@ if (!empty($input_error_array)) {
 
     <p>Already registered? <a href = "login.php">Log in here.</a></p>
 
-
 </body>
 </html>

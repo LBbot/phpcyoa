@@ -124,7 +124,7 @@ if (!empty($input_error_array)) {
 
     <p>Don't have an account? <a href = "register.php">Register here</a>.</p>
 
-    <p><a href = "forgot_password.php">Forgotten your password?</a></p>
+    <p><a href = "forgot_password_1.php">Forgotten your password?</a></p>
     </div>
 
 </body>

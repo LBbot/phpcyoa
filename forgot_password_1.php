@@ -73,7 +73,7 @@ ENDOFHEREDOCTEXT;
 
                 // Sending email and redirecting to account activation page
                 if (mail($to, $subject, $message, $headers)) {
-                    // header("location: forgot_password_2.php");
+                    header("location: forgot_password_2.php");
                     exit();
                 } else {
                     array_push($input_error_array, "Unable to send mail. Please try again later.");
@@ -107,3 +107,6 @@ if (!empty($input_error_array)) {
     </form>
 
     <p><a href="login.php">Click here to go back</a>.</p>
+
+</body>
+</html>
