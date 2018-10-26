@@ -11,6 +11,7 @@ if (!isset($_SESSION["unconfirmed_email"]) || empty($_SESSION["unconfirmed_email
     exit();
 }
 
+// We add any session errors from resend.php into this page's store, and get rid of that session
 if (isset($_SESSION["error"]) || !empty($_SESSION["error"])) {
     $input_error_array = array($_SESSION["error"]);
     unset($_SESSION["error"]);
