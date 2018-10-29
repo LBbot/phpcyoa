@@ -10,3 +10,12 @@
 <body>
 <div class = "container">
     <h1>PHP CYOA</h1>
+
+    <!-- If any errors: show them -->
+    <?php
+    if (!empty($input_error_array)) {
+        foreach ($input_error_array as $single_error) {
+            echo "<h3>$single_error</h3>";
+        }
+    }
+    ?>

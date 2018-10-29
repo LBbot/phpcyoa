@@ -41,8 +41,10 @@ if (isset($_COOKIE["et_cookie"]) && !empty($_COOKIE["et_cookie"])) {
         couch_put_or_post("PUT", $couch_rows_arr[0]["id"], $couch_rows_arr[0]["doc"]);
 
     } catch (Exception $e) {
+        // Let's just crap out of the whole thing, render nothing but the plaintext warning.
         $custom_error = "Error connecting to database. Please try again later.";
         echo $custom_error;
+        exit();
     }
 }
 

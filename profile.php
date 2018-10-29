@@ -18,8 +18,9 @@ try {
     $couch_output_arr = couch_get_decode_json($couchViewKey);
     $user_doc = $couch_output_arr[0]["doc"];
 } catch (Exception $e) {
-    $custom_error = "Error connecting to database. Please try again later.";
-    echo $custom_error;
+    // Let's abort loading the page altogether without the DB - just show the error message in plain text.
+    echo "Error connecting to database. Please try again later.";
+    exit();
 }
 
 // Set up page title and <head>/header, and container

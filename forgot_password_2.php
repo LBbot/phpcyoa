@@ -15,86 +15,10 @@ if (isset($_SESSION["unconfirmed_email"]) && !empty($_SESSION["unconfirmed_email
     exit();
 }
 
-// enter code
-
-// SHOULD THE PREVIOUS FORM POST TO THIS PAGE SO WE HAVE EMAIL IN THE POST AND CAN'T GO HERE WITHOUT IT?!?!?!?!?!?!??!
-
-// WILL HAVE TO MAKE SURE WHETHER THEY ARE POSTING FROM LAST PAGE OR POSTING TO THIS PAGE
+// DO A SESSION CHECK ON EMAIL AND FLAG (see var_dump)
 
 
-// if they post the form on the page
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Empty array for errors to start
-    $input_error_array = array();
 
-    // CHECK HERE FOR EMAIL INPUT
-
-    // CHECK BELOW FOR IF THEY'RE SUBMITTING FROM THIS PAGE WITH THE CODE
-
-    // trim email, sanitize filter, then validation filter. If false, don't get db or do anything else
-    if (filter_var(filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL), FILTER_VALIDATE_EMAIL) === false) {
-        array_push($input_error_array, "Invalid email");
-    } else {
-        // If any + signs in email address, replace them with unicode so it doesn't break the Couch query.
-        $urlencoded_email = urlencode($_POST["email"]);
-
-        // 404 or database error catching with try/catch
-        try {
-            // Check for duplicate username, by getting Couch view of emails with key of the email posted
-            // Get doc from Couch
-            $cpath = "phpusers/_design/views/_view/emails-and-passwords?key=\"{$urlencoded_email}\"&include_docs=true";
-            $couch_output_arr = couch_get_decode_json($cpath);
-
-            // If it returns an empty array, the username/email is not in use, so can't check password
-            if (empty($couch_output_arr)) {
-                array_push($input_error_array, "Email address does not exist.");
-            }
-
-            // If no errors, let's proceed
-            if (empty($input_error_array)) {
-                // Generate a code
-                $password_reset_code = bin2hex(random_bytes(8));
-
-                // Let's get the full doc so we can add a property and do a PUT
-                $fullDoc = $couch_output_arr[0]["doc"];
-                $fullDoc["password_reset_code"] = $password_reset_code;
-
-                // Actually re-encode and send the json doc back with a PUT to the ID
-                couch_put_or_post("PUT", $fullDoc["_id"], $fullDoc);
-
-                // Sending email address TODO: change this to actual url or whatever
-                $email = "totallyrealemail@hotmail.com";
-                // Recipient email address (the key in that Couch view)
-                $to = $fullDoc["email"];
-                $subject = "PHPCYOA - Reset password";
-
-                $message = <<<ENDOFHEREDOCTEXT
-We have received a request to reset your password. If this was really you, please enter the following code into the
-page that asks for it.
-
-{$password_reset_code}
-
-If you did not reset your password, you can just ignore this.
-ENDOFHEREDOCTEXT;
-
-                // Create email headers
-                $headers = "From: " . $email . "\r\n" .
-                "Reply-To: ". $email . "\r\n" .
-                "X-Mailer: PHP/" . phpversion();
-
-                // Sending email and redirecting to account activation page
-                if (mail($to, $subject, $message, $headers)) {
-                    header("location: forgot_password_2.php");
-                    exit();
-                } else {
-                    array_push($input_error_array, "Unable to send mail. Please try again later.");
-                }
-            }
-        } catch (Exception $e) {
-            array_push($input_error_array, "Error connecting to database. Please try again later.");
-        }
-    }
-}
 
 
 
@@ -104,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Empty array for errors to start
     $input_error_array = array();
 
+    $hashedcode = $_POST["passcode"];
     // escape code maybe
     try {
         // compare it with what's in the db
@@ -118,20 +43,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // Set up page title and <head>/header, and container
 $page_title = "Reset password - PHP CYOA";
 include_once "head.php";
-
-// If any errors: show them
-if (!empty($input_error_array)) {
-    foreach ($input_error_array as $single_error) {
-        echo "<h3>$single_error</h3>";
-    }
-}
+var_dump($_SESSION);
 ?>
 
     <p>The email may take a few moments to arrive. Be sure to check your spam folder. Enter the passcode into the form
     below. </p>
 
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method = "post">
-        <label for="confirmcode">Passcode: </label>
+        <label for="passcode">Passcode: </label>
         <input class="form-textbox" type="text" id="passcode" name="passcode" maxlength="256"><br>
         <input class="custom-button" type="submit" class="js-submit" value="Submit">
     </form>

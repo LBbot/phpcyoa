@@ -20,14 +20,6 @@ if (!isset($_SESSION["password_reset_email"]) || !empty($_SESSION["password_rese
 // Set up page title and <head>/header
 $page_title = "Register an account - PHP CYOA";
 include_once "head.php";
-
-// If any errors: show them
-if (!empty($input_error_array)) {
-    foreach ($input_error_array as $single_error) {
-        echo "<h3>$single_error</h3>";
-    }
-}
-
 ?>
 
     <form method = "post">

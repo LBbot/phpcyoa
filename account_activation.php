@@ -90,12 +90,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" || array_key_exists("code", $_GET)) {
 $page_title = "Register an account - PHP CYOA";
 include_once "head.php";
 
-// If any errors: show them
-if (!empty($input_error_array)) {
-    foreach ($input_error_array as $single_error) {
-        echo "<h3>$single_error</h3>";
-    }
-}
 ?>
 
     <p><?php echo htmlspecialchars($_SESSION["unconfirmed_email"]); ?></p>
