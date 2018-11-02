@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     exit();
                 }
 
-                // Create a random token
+                // Create a random token for cookie
                 $token = bin2hex(random_bytes(12));
 
                 // Set bcrypt rounds, then hash token with them.

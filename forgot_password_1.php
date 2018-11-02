@@ -91,7 +91,7 @@ ENDOFHEREDOCTEXT;
 }
 
 // Set up page title and <head>/header, and container
-$page_title = "Reset password - PHP CYOA";
+$page_title = "Reset password step 1 - PHP CYOA";
 include_once "head.php";
 
 ?>
