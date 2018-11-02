@@ -1,3 +1,0 @@
-<?php
-
-// enter new email

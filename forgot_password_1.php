@@ -96,8 +96,8 @@ include_once "head.php";
 
 ?>
 
-    <p>Enter your email address below and we'll send a one-time use passcode to that email address that will allow you
-    to create a new password.</p>
+    <p>Enter your email address below and we'll send a one-time use passcode to that email address as a security
+    measure. Entering that on the next page will allow you to create a new password.</p>
 
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method = "post">
         <label for="email">Email address: </label>

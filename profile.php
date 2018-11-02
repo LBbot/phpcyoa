@@ -30,7 +30,7 @@ include_once "head.php";
 
     <!-- escape any of the users characters we're displaying back to them -->
     <p><?php echo htmlspecialchars($user_doc["email"]); ?><br>
-    <a href = "email_change_1.php">Change email address</a></p>
+    <a href = "change_email.php">Change email address</a></p>
 
     <form method="get" action="gametemplate.php">
         <input type="submit" class="custom-button" name="1" value="Start new game">

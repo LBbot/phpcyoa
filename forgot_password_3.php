@@ -44,8 +44,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Let's get the full doc so we can rewrite the hashed password and do a PUT
             $cpath = "phpusers/_design/views/_view/emails-and-passwords?key=\"{$encoded_email}\"&include_docs=true";
             $couch_output_arr = couch_get_decode_json($cpath);
-
             $fullDoc = $couch_output_arr[0]["doc"];
+
             // Set the rounds on bcrypt for passcode hashing
             $options = ["cost" => 12];
             $fullDoc["password"] = password_hash($_POST["password"], PASSWORD_BCRYPT, $options);
@@ -102,6 +102,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $page_title = "Reset password - PHP CYOA";
 include_once "head.php";
 ?>
+
+    <p>Now that your email is verified, you can enter your new password below.</p>
 
     <form method = "post">
 
