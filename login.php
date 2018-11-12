@@ -24,6 +24,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // trim email, sanitize filter, then validation filter. If false, don't get db or do anything else
     if (filter_var(filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL), FILTER_VALIDATE_EMAIL) === false) {
         array_push($input_error_array, "Invalid email");
+    //check for backslashes, if it returns a number (not false), skip everything else below
+    } elseif (strpos($_POST["email"], "\\") !== false) {
+        array_push($input_error_array, "Email cannot include backslashes.");
     } else {
         // If any + signs in email address, replace them with unicode so it doesn't break the Couch query.
         $urlencoded_email = urlencode($_POST["email"]);
