@@ -125,6 +125,16 @@ a:hover, a:active {
     border: 1px solid white;
 }
 
+img {
+    width: auto;
+    max-width: 100%;
+    max-height: 500px;
+    border: 1px solid white;
+    border-radius: 4px;
+    margin: -20px;
+
+}
+
 @media (max-height: 600px) {
     /* Here we reset the vertical centering because it cuts off text on stumpy screens */
     .game-container {

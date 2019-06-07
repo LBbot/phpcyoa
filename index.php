@@ -9,16 +9,11 @@ include_once "head.php";
 
     <p class="prose">A short, simple game written in PHP in the vein of a
     <a href="https://en.wikipedia.org/wiki/Gamebook">choose-your-own-adventure</a>, where you are presented with a
-    generic fantasy scenario and make choices that can decide whether you and those around you live or die*.
-    <br /><br />
-    <sup>*"You" being the character in the game - the game is not designed to harm you or those you around you in real
-    life.<sup></p>
+    generic fantasy scenario and make choices that can decide whether you and those around you live or die.</p>
 
-    <!-- TODO: include a screenshot here -->
+    <img src="/public/fullturnedscreenshot.png">
 
     <p class="prose">Replay with the savegame feature to see the other outcomes and possiblities!</p>
-
-
 
     <p>To play, just: </p>
 

@@ -1,0 +1,8 @@
+<?php
+
+return array(
+    "email_links_url" => "phpcyoa.example",
+    "email_address" => "noreply@example.org",
+    "couch-admin" => "bob",
+    "couch-password" => "password1",
+);
