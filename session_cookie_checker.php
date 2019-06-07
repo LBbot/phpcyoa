@@ -22,22 +22,29 @@ function session_cookie_check()
             $response = $client->request("GET", $couchViewAndKey);
             $json = $response->getBody()->getContents();
             $decoded_json = json_decode($json, true);
-            // Hashed tokens are an array (so user can log in on multiple devices/sessions)
-            $hashed_tokens_array = $decoded_json["rows"][0]["value"];
 
-            // Loop through hashed tokens array and see if hashing the raw token inside the cookie (t) matches any of
-            // the hashes in the DB.
-            foreach ($hashed_tokens_array as $hashed_token) {
-                if (password_verify($raw_token, $hashed_token)) {
-                    // Token matches, so let's give the user a new session cookie to authenticate!
-                    // We get the email address from the Couch doc so its correctly not url encoded and is safe
-                    $_SESSION["email"] = $decoded_json["rows"][0]["key"];
-                    return true;
+            // let's make sure we actually got a result back from CouchDB (if not, we jump down and return false)
+            // (a deleted user with a cookie causes problems here)
+            if (sizeof($decoded_json["rows"]) > 0) {
+                // Hashed tokens are an array (so user can log in on multiple devices/sessions)
+                $hashed_tokens_array = $decoded_json["rows"][0]["value"];
+
+                // Loop through hashed tokens array and see if hashing the raw token inside the cookie (t) matches any
+                // of the hashes in the DB.
+                foreach ($hashed_tokens_array as $hashed_token) {
+                    if (password_verify($raw_token, $hashed_token)) {
+                        // Token matches, so let's give the user a new session cookie to authenticate!
+                        // We get the email address from the Couch doc so its correctly not url encoded and is safe
+                        $_SESSION["email"] = $decoded_json["rows"][0]["key"];
+                        return true;
+                    }
                 }
             }
         } catch (Exception $e) { // Database error
             // TODO: can we pass an error to the array on this other page?????????????????
             // doing nothing seems to pass to the final return anyway? Though we should have an error.
+            return false;
+
         }
         // If no session and no matching cookie, send unauthenticated user back to login.
     }
