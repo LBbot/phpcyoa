@@ -34,7 +34,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // If any + signs in email address, replace them with unicode so it doesn't break the Couch query.
     $encoded_email = urlencode($_SESSION["pwchange_email"]);
 
-    // Compare password with confirmation
+    // Ensure no inputs are left blank
+    if ($_POST["password"] == "" || $_POST["passwordconfirm"] == "") {
+        array_push($input_error_array, "Both fields are required and cannot be left blank.");
+    }
+
+    // Ensure password input and confirmation input match
     if ($_POST["password"] !== $_POST["passwordconfirm"]) {
         array_push($input_error_array, "Passwords must match");
     }
